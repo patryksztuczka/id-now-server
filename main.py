@@ -21,16 +21,23 @@ def process_image():
     image_base64 = content["imageBase64"]
     image_bytes = base64.b64decode(image_base64)
 
-    with open("imageToSave.png", "wb") as f:
+    with open("imageToSave.jpg", "wb") as f:
         f.write(image_bytes)
 
-    img = cv2.imread("imageToSave.png")
+    img = cv2.imread("imageToSave.jpg")
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    cv2.imwrite("imageToSave.png", gray)
+    cv2.imwrite("imageToSave.jpg", gray)
 
-    return {"status": "success"}
+    processed_image_base64 = base64.b64encode(open("imageToSave.jpg", "rb").read())
+
+    return jsonify(
+        {
+            "imageBase64": processed_image_base64.decode("utf-8"),
+            "status": 200,
+        }
+    )
 
 
 if __name__ == "__main__":
